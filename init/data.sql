@@ -1,11 +1,7 @@
 \connect "postgres";
 
-DROP TABLE IF EXISTS "produtos";
+DROP TABLE IF EXISTS "products_amazon";
 
-CREATE TABLE produtos (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(255),
-    descricao TEXT,
-    preco DECIMAL(10, 2),
-    detalhes JSON
+CREATE TABLE products_amazon (
+    id TEXT, name TEXT , category TEXT, price TEXT, description TEXT, details JSONB
 );
