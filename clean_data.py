@@ -7,17 +7,20 @@ def parse_specification(specification):
     for entry in entries:
         if ":" in entry:
             key, value = entry.split(":", 1)
-            props[key]=value
+            props[key]=value.replace('"', '').replace("'", '').strip()
     return props
 
 class Product:
     
     def __init__(self, id, name, category, selling_price, about_product, product_specification):
         self.id = id
-        self.name = name
-        self.category = category
-        self.price = selling_price
-        self.description = about_product
+        self.name = name.replace('"', '').replace("'", '')
+        self.category = category.replace('"', '').replace("'", '')
+        if "-" in selling_price:
+            self.price = selling_price.match
+        else:
+            self.price = selling_price.replace("$", '')
+        self.description = about_product.replace('"', '').replace("'", '')
         self.details = Details(product_specification)
 
 class Details:
@@ -41,7 +44,7 @@ class Details:
     
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+            sort_keys=True, indent=0)
 
 
 # Read csv products_amazon
@@ -59,7 +62,7 @@ with open('products_amazon.csv', 'r') as csv_file:
     with open('products_amazon.sql', 'w') as sql_file:
         sql_file.write("INSERT INTO products_amazon (id, name, category, price, description, details) VALUES\n")
         for product in data:
-            sql_file.write(f"({product.id}, '{product.name}', '{product.category}', {product.price}, '{product.description}', '{product.details.toJSON()}'),\n")
+            sql_file.write(f"""('{product.id}', '{product.name}', '{product.category}', {product.price}, '{product.description}', '{product.details.toJSON()}'),""")
         sql_file.write(";")
 
     
